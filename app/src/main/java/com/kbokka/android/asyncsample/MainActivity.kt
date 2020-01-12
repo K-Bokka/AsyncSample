@@ -9,6 +9,7 @@ import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.SimpleAdapter
 import android.widget.TextView
+import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -76,12 +77,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onPostExecute(result: String) {
-      //TODO: parse json string
+      val rootJson = JSONObject(result)
+      val descriptionJson = rootJson.getJSONObject("description")
+      val desc = descriptionJson.getString("text")
+      val forecasts = descriptionJson.getJSONArray("forecasts")
+      val forecastNow = forecasts.getJSONObject(0)
+      val telop = forecastNow.getString("telop")
 
       val tvWeatherTelop = findViewById<TextView>(R.id.tvWeatherTelop)
       val tvWeatherDesc = findViewById<TextView>(R.id.tvWeatherDesc)
-      tvWeatherTelop.text = "dummy"
-      tvWeatherDesc.text = "dymmy"
+      tvWeatherTelop.text = telop
+      tvWeatherDesc.text = desc
     }
   }
 
