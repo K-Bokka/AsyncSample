@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
       val rootJson = JSONObject(result)
       val descriptionJson = rootJson.getJSONObject("description")
       val desc = descriptionJson.getString("text")
-      val forecasts = descriptionJson.getJSONArray("forecasts")
+      val forecasts = rootJson.getJSONArray("forecasts")
       val forecastNow = forecasts.getJSONObject(0)
       val telop = forecastNow.getString("telop")
 
