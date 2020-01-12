@@ -1,6 +1,7 @@
 package com.kbokka.android.asyncsample
 
 import android.annotation.SuppressLint
+import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -40,9 +41,34 @@ class MainActivity : AppCompatActivity() {
     override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
       val item = parent.getItemAtPosition(position) as Map<*, *>
       val cityName = item["name"] as String
+      val cityId = item["id"] as String
 
       val tvCityName = findViewById<TextView>(R.id.tvCityName)
       tvCityName.text = cityName + getString(R.string.suffix_city_weather)
+
+      val receiver = WeatherInfoReceiver()
+      receiver.execute(cityId)
+    }
+  }
+
+  @SuppressLint("StaticFieldLeak")
+  private inner class WeatherInfoReceiver() : AsyncTask<String, String, String>() {
+    override fun doInBackground(vararg params: String): String {
+      val id = params[0]
+      val urlString = "http://weather.livedoor.com/forecast/webservice/json/v1?city=${id}"
+
+      //TODO: get request to url
+
+      return "dummy"
+    }
+
+    override fun onPostExecute(result: String) {
+      //TODO: parse json string
+
+      val tvWeatherTelop = findViewById<TextView>(R.id.tvWeatherTelop)
+      val tvWeatherDesc = findViewById<TextView>(R.id.tvWeatherDesc)
+      tvWeatherTelop.text = "dummy"
+      tvWeatherDesc.text = "dymmy"
     }
   }
 }
