@@ -9,6 +9,12 @@ import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.SimpleAdapter
 import android.widget.TextView
+import java.io.BufferedReader
+import java.io.InputStream
+import java.io.InputStreamReader
+import java.lang.StringBuilder
+import java.net.HttpURLConnection
+import java.net.URL
 
 class MainActivity : AppCompatActivity() {
 
@@ -56,10 +62,17 @@ class MainActivity : AppCompatActivity() {
     override fun doInBackground(vararg params: String): String {
       val id = params[0]
       val urlString = "http://weather.livedoor.com/forecast/webservice/json/v1?city=${id}"
+      val url = URL(urlString)
+      val con = url.openConnection() as HttpURLConnection
+      con.requestMethod = "GET"
+      con.connect()
 
-      //TODO: get request to url
+      val stream = con.inputStream
+      val result = is2String(stream)
+      con.disconnect()
+      stream.close()
 
-      return "dummy"
+      return result
     }
 
     override fun onPostExecute(result: String) {
@@ -70,5 +83,17 @@ class MainActivity : AppCompatActivity() {
       tvWeatherTelop.text = "dummy"
       tvWeatherDesc.text = "dymmy"
     }
+  }
+
+  private fun is2String(stream: InputStream): String {
+    val sb = StringBuilder()
+    val reader = BufferedReader(InputStreamReader(stream, "UTF-8"))
+    var line = reader.readLine()
+    while (line != null) {
+      sb.append(line)
+      line = reader.readLine()
+    }
+    reader.close()
+    return sb.toString()
   }
 }
